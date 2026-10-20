@@ -763,7 +763,9 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 .viewtoggle button:hover { background: var(--paper-2); }
 .viewtoggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .viewtoggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
-.no-ring .viewtoggle { display: none; }
+.pgrid__head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: clamp(60px, 8vw, 110px); padding-top: 20px; border-top: 1px solid var(--line); }
+.pgrid__head .mono:last-child { color: var(--ink-2); }
+.is-grid .pgrid__head { margin-top: 30px; }
 
 .ring {
   position: relative; margin-top: 24px;
@@ -791,7 +793,6 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 .ring__nav button:hover, .ring__nav button:focus-visible { background: var(--orange); border-color: var(--orange); color: var(--char); }
 .ring__nav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 .pgallery.is-grid .ring { display: none; }
-.pgallery:not(.is-grid) .pgrid { display: none; }
 
 @media (max-width: 900px) {
   .ring { height: 76svh; min-height: 480px; margin-top: 14px; }

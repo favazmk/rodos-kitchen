@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css" integrity="sha384-gvLq/iOMNnPchdosgVym5huSVkKipHCQaqSw2Eg0V52Mzmlf169ZOsXcNc2cNu8x" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=12">
   <script type="importmap">
     {
       "imports": {
@@ -99,10 +99,6 @@
         <button aria-pressed="false" data-filter="steel">All-steel <sup>4</sup></button>
         <button aria-pressed="false" data-filter="details">Details <sup>7</sup></button>
       </div>
-      <div class="viewtoggle" role="group" aria-label="Gallery view">
-        <button aria-pressed="true" data-view="ring"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="9" ry="4"/></svg>Ring</button>
-        <button aria-pressed="false" data-view="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>Grid</button>
-      </div>
       </div>
 
       <div class="ring" data-ring data-cursor="Drag">
@@ -123,6 +119,10 @@
         <p class="ring__hint mono" aria-hidden="true">Drag · scroll · click to open</p>
       </div>
 
+      <div class="pgrid__head">
+        <p class="eyebrow mono"><i></i>Every project</p>
+        <span class="mono" data-grid-count>20 photos</span>
+      </div>
       <div class="pgrid" data-pgrid>
         <button class="shot pcell" data-cat="islands" data-cursor="View" data-full="assets/img/bar-counter-warm.webp"><img src="assets/img/bar-counter-warm.webp" alt="Steel-topped breakfast bar with oak cabinets and warm under-lighting" loading="lazy" width="2200" height="1469"><span class="shot__cap mono">Breakfast bar · steel top · oak</span></button>
         <button class="shot pcell" data-cat="full" data-cursor="View" data-full="assets/img/villa-dining-kitchen.webp"><img src="assets/img/villa-dining-kitchen.webp" alt="Villa kitchen and dining room with a crystal chandelier and gold trims" loading="lazy" width="1312" height="1500"><span class="shot__cap mono">Villa kitchen &amp; dining</span></button>
@@ -201,6 +201,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/Flip.min.js" integrity="sha384-LY8cG/IUULu4u3V3AhwWBt01HIuO/hlekjkqgBx0DOJ/oquEL0Qk2L6qy+1QeRZM" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script>
-  <script type="module" src="js/main.js?v=11"></script>
+  <script type="module" src="js/main.js?v=12"></script>
 </body>
 </html>

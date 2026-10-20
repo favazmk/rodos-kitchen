@@ -402,10 +402,11 @@ function setupFilters() {
     const f = b.dataset.filter;
     const gallery = grid.closest('[data-pgallery]');
     gallery?.dispatchEvent(new CustomEvent('rodos:filter', { detail: f })); // the 3D ring re-spaces itself
-    const gridShown = !gallery || gallery.classList.contains('is-grid');
-    const state = window.Flip && !reduced && gridShown ? Flip.getState(cells) : null;
+    const state = window.Flip && !reduced ? Flip.getState(cells) : null;
     cells.forEach((c) => (c.style.display = f === 'all' || c.dataset.cat === f ? '' : 'none'));
     layout();
+    const gc = $('[data-grid-count]');
+    if (gc) gc.textContent = `${cells.filter((c) => c.style.display !== 'none').length} photos`;
     if (!state) return ScrollTrigger.refresh();
     Flip.from(state, {
       duration: 0.8, ease: 'expo.inOut', absolute: true, scale: true, nested: true,
@@ -448,20 +449,10 @@ if (anatomy && gl) {
 /* Projects — 3D ring gallery, with the grid as the alternative view */
 const gallery = $('[data-pgallery]');
 if (gallery) {
-  const setView = (v) => {
-    gallery.classList.toggle('is-grid', v === 'grid');
-    $$('[data-view]', gallery).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
-    ScrollTrigger.refresh();
-  };
-  $$('[data-view]', gallery).forEach((b) =>
-    b.addEventListener('click', () => {
-      if (b.getAttribute('aria-pressed') === 'true') return;
-      setView(b.dataset.view);
-      if (!reduced) gsap.from(b.dataset.view === 'grid' ? '.pgrid' : '.ring', { opacity: 0, y: 40, duration: 0.9, ease: 'expo.out' });
-    })
-  );
+  // ring on top, full grid underneath; without WebGL only the grid shows
+  const setView = (v) => { gallery.classList.toggle('is-grid', v === 'grid'); ScrollTrigger.refresh(); };
   if (gl && !reduced) {
-    import('./ring.js?v=11')
+    import('./ring.js?v=12')
       .then((m) => m.initRing(gallery, { gsap, ScrollTrigger }))
       .catch((err) => { console.error(err); root.classList.add('no-ring'); setView('grid'); });
   } else {
