@@ -4,3 +4,4 @@
 # Local tooling
 .claude/
 .vercel/
+.env*
