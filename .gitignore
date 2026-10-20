@@ -7,3 +7,6 @@
 
 .vercel
 .env*
+
+# AI image samples for client approval (not part of the site)
+client-review/
