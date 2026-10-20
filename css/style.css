@@ -754,6 +754,59 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
   .visit__text, .visit__map { grid-column: 1 / -1; }
 }
 
+
+/* ---------- Projects: 3D ring ---------- */
+.pg-bar { position: sticky; top: calc(var(--nav-h) + 12px); z-index: 5; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.pg-bar .filters { position: static; }
+.viewtoggle { display: inline-flex; gap: 4px; padding: 6px; border-radius: 999px; background: rgba(20, 25, 18, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--line); }
+.viewtoggle button { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: background-color 0.35s, color 0.35s; }
+.viewtoggle button:hover { background: var(--paper-2); }
+.viewtoggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.viewtoggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.no-ring .viewtoggle { display: none; }
+
+.ring {
+  position: relative; margin-top: 24px;
+  height: min(88svh, 880px); min-height: 560px;
+  border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
+  background: radial-gradient(ellipse 70% 60% at 50% 58%, #1c2619 0%, #121710 55%, var(--paper) 100%);
+}
+.ring__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: grab; }
+.ring__canvas:focus-visible { outline: 2px solid var(--orange); outline-offset: -6px; border-radius: var(--radius); }
+.has-cursor .ring__canvas { cursor: none !important; }
+.ring__word {
+  position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); margin: 0;
+  font-weight: 900; text-transform: uppercase; white-space: nowrap; pointer-events: none;
+  font-size: 19vw; line-height: 0.8; letter-spacing: -0.06em;
+  color: transparent; -webkit-text-stroke: 1px rgba(236, 232, 223, 0.1);
+}
+.ring__hint { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); margin: 0; color: var(--ink-2); pointer-events: none; }
+.ring__hud { position: absolute; left: 28px; right: 28px; bottom: 26px; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; pointer-events: none; }
+.ring__cap { display: grid; gap: 6px; overflow: hidden; padding-bottom: 4px; }
+.ring__num { color: var(--orange); }
+.ring__title { margin: 0; font-family: var(--f-serif); font-size: clamp(1.9rem, 3.4vw, 3.3rem); line-height: 1.02; letter-spacing: -0.015em; }
+.ring__cat { color: var(--ink-2); }
+.ring__nav { display: flex; align-items: center; gap: 14px; pointer-events: auto; color: var(--ink-2); }
+.ring__nav button { width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--line); color: var(--ink); display: grid; place-items: center; transition: background-color 0.35s, color 0.35s, border-color 0.35s; }
+.ring__nav button:hover, .ring__nav button:focus-visible { background: var(--orange); border-color: var(--orange); color: var(--char); }
+.ring__nav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.pgallery.is-grid .ring { display: none; }
+.pgallery:not(.is-grid) .pgrid { display: none; }
+
+@media (max-width: 900px) {
+  .ring { height: 76svh; min-height: 480px; margin-top: 14px; }
+  .ring__word { font-size: 30vw; top: 38%; }
+  .ring__hud { left: 16px; right: 16px; bottom: 16px; flex-direction: column; align-items: stretch; gap: 14px; }
+  .ring__nav { justify-content: space-between; }
+  .ring__nav button { width: 48px; height: 48px; }
+  .ring__hint { top: 14px; white-space: nowrap; }
+  .pg-bar { flex-wrap: nowrap; }
+  .pg-bar .filters { min-width: 0; }
+  .viewtoggle { flex: none; }
+  .viewtoggle button { padding: 0 12px; font-size: 0; gap: 0; }
+  .viewtoggle svg { width: 18px; height: 18px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

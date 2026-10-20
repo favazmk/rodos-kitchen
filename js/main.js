@@ -400,7 +400,10 @@ function setupFilters() {
     if (!b || b.classList.contains('is-on')) return;
     $$('[data-filter]', bar).forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
     const f = b.dataset.filter;
-    const state = window.Flip && !reduced ? Flip.getState(cells) : null;
+    const gallery = grid.closest('[data-pgallery]');
+    gallery?.dispatchEvent(new CustomEvent('rodos:filter', { detail: f })); // the 3D ring re-spaces itself
+    const gridShown = !gallery || gallery.classList.contains('is-grid');
+    const state = window.Flip && !reduced && gridShown ? Flip.getState(cells) : null;
     cells.forEach((c) => (c.style.display = f === 'all' || c.dataset.cat === f ? '' : 'none'));
     layout();
     if (!state) return ScrollTrigger.refresh();
@@ -440,6 +443,31 @@ if (anatomy && gl) {
     .catch((err) => { console.error(err); root.classList.add('no-webgl'); });
 } else {
   root.classList.add('no-webgl');
+}
+
+/* Projects — 3D ring gallery, with the grid as the alternative view */
+const gallery = $('[data-pgallery]');
+if (gallery) {
+  const setView = (v) => {
+    gallery.classList.toggle('is-grid', v === 'grid');
+    $$('[data-view]', gallery).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+    ScrollTrigger.refresh();
+  };
+  $$('[data-view]', gallery).forEach((b) =>
+    b.addEventListener('click', () => {
+      if (b.getAttribute('aria-pressed') === 'true') return;
+      setView(b.dataset.view);
+      if (!reduced) gsap.from(b.dataset.view === 'grid' ? '.pgrid' : '.ring', { opacity: 0, y: 40, duration: 0.9, ease: 'expo.out' });
+    })
+  );
+  if (gl && !reduced) {
+    import('./ring.js?v=11')
+      .then((m) => m.initRing(gallery, { gsap, ScrollTrigger }))
+      .catch((err) => { console.error(err); root.classList.add('no-ring'); setView('grid'); });
+  } else {
+    root.classList.add('no-ring');
+    setView('grid');
+  }
 }
 
 addEventListener('load', () => {
