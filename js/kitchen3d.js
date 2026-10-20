@@ -98,9 +98,9 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: 1, far: 15 });
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
-  scene.add(key, new THREE.HemisphereLight(0xffffff, 0xd9d2c4, 0.5));
+  scene.add(key, new THREE.HemisphereLight(0xffffff, 0x2a3026, 0.6));
 
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.16 }));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.55 }));
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
   scene.add(floor);

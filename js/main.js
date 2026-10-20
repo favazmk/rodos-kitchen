@@ -430,7 +430,7 @@ setupFilters();
 const anatomy = $('[data-anatomy]');
 const gl = document.createElement('canvas').getContext('webgl2');
 if (anatomy && gl) {
-  import('./kitchen3d.js?v=5')
+  import('./kitchen3d.js?v=8')
     .then((m) => {
       m.initKitchen(anatomy, { reduced, gsap, ScrollTrigger });
       // the 3D pin is created after later sections' triggers: re-order and recalc
