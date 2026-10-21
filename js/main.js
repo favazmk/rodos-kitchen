@@ -71,6 +71,7 @@ function heroIn() {
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
   tl.to('.hero__img-wrap', { clipPath: 'inset(0% 0 0 0)', duration: 1.6, ease: 'expo.inOut' }, 0)
     .fromTo('.hero__img-wrap img', { scale: 1.35 }, { scale: 1, duration: 2.2, ease: 'expo.out' }, 0.2)
+    .fromTo('.film__media', { scale: 1.12 }, { scale: 1, duration: 2.4, ease: 'expo.out' }, 0)
     .to('.hero__line > span', { y: 0, yPercent: 0, duration: 1.4, stagger: 0.09 }, 0.35)
     .to('.hero__serif > span', { yPercent: 0, y: 0, duration: 1.3 }, 0.6)
     .to('[data-hero-fade]', { opacity: 1, y: 0, duration: 1.2, stagger: 0.08 }, 0.8);
@@ -116,14 +117,74 @@ if (reduced) {
   });
 }
 
-/* ---------- Hero "close" — curtain as the page scrolls over it ---------- */
-if (!reduced && $('[data-hero]')) {
-  gsap.to('[data-hero]', {
-    scale: 0.92, opacity: 0.35, borderRadius: 24, ease: 'none',
-    scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: true, pin: true, pinSpacing: false },
+/* ---------- Film hero: scroll walks through the door into the kitchen ----------
+   A canvas frame sequence, not a scrubbed <video>: seeking stutters on iOS Safari
+   and low-end Android, frames always paint. Portrait screens get the vertical cut. */
+function setupFilm() {
+  const film = $('[data-film]');
+  if (!film || reduced) return;
+  const COUNT = 120;
+  const canvas = $('.film__canvas', film);
+  const ctx = canvas.getContext('2d');
+  const sets = {};
+  let frames = null, drawn = null, want = 0;
+
+  const load = (key) => {
+    if (sets[key]) return sets[key];
+    const list = (sets[key] = []);
+    // every 8th frame first, then the gaps — a fast scroll always has a near frame
+    const order = [...Array(COUNT).keys()].sort((a, b) => (a % 8 ? 1 : 0) - (b % 8 ? 1 : 0) || a - b);
+    order.forEach((i) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => { list[i] = img; if (list === frames && Math.abs(i - want) < 8) draw(); };
+      img.src = `assets/film/${key}/${String(i + 1).padStart(3, '0')}.webp`;
+    });
+    return list;
+  };
+
+  function draw() {
+    let img = frames[want];
+    for (let d = 1; !img && d < COUNT; d++) img = frames[want - d] || frames[want + d];
+    if (!img || img === drawn) return;
+    drawn = img;
+    const cw = canvas.width, ch = canvas.height;
+    const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+    const w = img.naturalWidth * s, h = img.naturalHeight * s;
+    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+    film.classList.add('is-live');
+  }
+
+  const size = () => {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = Math.round(canvas.clientWidth * dpr);
+    canvas.height = Math.round(canvas.clientHeight * dpr);
+    frames = load(innerWidth / innerHeight < 0.9 ? 'm' : 'd');
+    drawn = null;
+    draw();
+  };
+  size();
+  new ResizeObserver(size).observe(canvas);
+
+  const tl = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: {
+      trigger: film, start: 'top top', end: () => '+=' + innerHeight * 3,
+      pin: true, scrub: true, anticipatePin: 1, invalidateOnRefresh: true,
+      onUpdate: (s) => { want = Math.round(Math.min(s.progress / 0.94, 1) * (COUNT - 1)); draw(); },
+    },
   });
-  gsap.to('.hero__img-wrap img', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: true } });
+  tl.fromTo('[data-film-bar]', { scaleX: 0 }, { scaleX: 1, duration: 1 }, 0)
+    .to('[data-film-intro]', { autoAlpha: 0, y: -60, duration: 0.12 }, 0.08);
+  $$('[data-film-chapter]', film).forEach((el) => {
+    const [a, b] = el.dataset.filmChapter.split(',').map(Number);
+    tl.fromTo(el, { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 0.08 }, a)
+      .to(el, { autoAlpha: 0, y: -50, duration: 0.08 }, b - 0.08);
+  });
+  // close to the page colour so the pin releases into the strip below
+  tl.fromTo('.film__media', { '--end': 0 }, { '--end': 1, duration: 0.08 }, 0.92);
 }
+setupFilm();
 /* Inner pages: hero image closes in (scales down, rounds) as it scrolls away */
 if (!reduced && $('.phero')) {
   gsap.to('.phero .hero__img-wrap', { scale: 0.9, borderRadius: 28, ease: 'none', scrollTrigger: { trigger: '.phero__media', start: 'top 30%', end: 'bottom top', scrub: true } });

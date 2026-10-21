@@ -13,9 +13,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/img/hero-marble-island.webp">
+  <link rel="preload" as="image" href="assets/film/d/001.webp" media="(orientation: landscape)">
+  <link rel="preload" as="image" href="assets/film/m/001.webp" media="(orientation: portrait)">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css" integrity="sha384-gvLq/iOMNnPchdosgVym5huSVkKipHCQaqSw2Eg0V52Mzmlf169ZOsXcNc2cNu8x" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/style.css?v=12">
+  <link rel="stylesheet" href="css/style.css?v=14">
   <script type="importmap">
     {
       "imports": {
@@ -70,38 +71,53 @@
 
   <main id="main">
 
-    <section class="hero guides" id="top" data-hero>
-      <div class="hero__meta mono">
-        <span>Residential<br>Villas &amp; Apartments</span>
-        <span class="hero__coords">25.31° N<br>55.40° E</span>
+    <!-- Hero: a walk through the door into a finished kitchen, scrubbed by scroll -->
+    <section class="film" id="top" data-film>
+      <div class="film__media" aria-hidden="true">
+        <picture>
+          <source media="(orientation: portrait)" srcset="assets/film/m/001.webp" width="720" height="1280">
+          <img class="film__poster" src="assets/film/d/001.webp" alt="" width="1280" height="720" fetchpriority="high">
+        </picture>
+        <canvas class="film__canvas"></canvas>
+        <div class="film__shade"></div>
       </div>
 
-      <div class="hero__copy">
-        <h1 class="hero__title">
-          <span class="hero__line"><span>Built in</span></span>
-          <span class="hero__line"><span>steel.</span></span>
-          <span class="hero__serif"><span>Made for the way your family <em>really</em> cooks.</span></span>
-        </h1>
-        <p class="hero__lede" data-hero-fade>Modular stainless steel kitchens for villas and apartments across the UAE — designed with you, manufactured in Ras Al Khaimah, installed by one team.</p>
-        <div class="hero__ctas" data-hero-fade>
-          <a class="btn btn--accent" href="contact.html" data-magnetic>
-            <span class="btn__roll"><span data-label="Plan my kitchen">Plan my kitchen</span></span>
-            <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-          <a class="u-link hero__see" href="projects.html">See finished kitchens <span aria-hidden="true">↓</span></a>
+      <div class="film__ui">
+        <div class="hero__meta mono">
+          <span>Residential<br>Villas &amp; Apartments</span>
+          <span class="hero__coords">25.31° N<br>55.40° E</span>
         </div>
-      </div>
 
-      <figure class="hero__media" data-cursor="Scroll">
-        <div class="hero__img-wrap">
-          <img src="assets/img/hero-marble-island.webp" alt="Calacatta marble island with a brushed stainless steel canopy hood and dark glass wine wall" width="2200" height="1469" fetchpriority="high">
+        <div class="hero__copy" data-film-intro>
+          <h1 class="hero__title">
+            <span class="hero__line"><span>Step</span></span>
+            <span class="hero__line"><span>inside.</span></span>
+            <span class="hero__serif"><span>Steel at the core. <em>Warmth</em> on every surface.</span></span>
+          </h1>
+          <p class="hero__lede" data-hero-fade>Modular kitchens built on a stainless steel carcass and finished in oak, marble or lacquer — for villas and apartments across the UAE. Designed with you, made in Ras Al Khaimah, installed by one team.</p>
+          <div class="hero__ctas" data-hero-fade>
+            <a class="btn btn--accent" href="contact.html" data-magnetic>
+              <span class="btn__roll"><span data-label="Plan my kitchen">Plan my kitchen</span></span>
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="u-link hero__see" href="projects.html">See finished kitchens <span aria-hidden="true">↓</span></a>
+          </div>
         </div>
-        <figcaption class="mono"><span>01</span> Marble island · steel canopy · wine wall</figcaption>
-      </figure>
 
-      <div class="hero__foot mono" data-hero-fade>
-        <span>Build once.<br>Cook for decades.</span>
-        <span class="hero__scroll"><i></i>Scroll</span>
+        <div class="film__chapter" data-film-chapter="0.3,0.56">
+          <p class="eyebrow mono eyebrow--light"><i></i>Planned with you</p>
+          <p class="film__line">Planned around the way you <em>move, store and host.</em></p>
+        </div>
+        <div class="film__chapter" data-film-chapter="0.6,0.86">
+          <p class="eyebrow mono eyebrow--light"><i></i>One team</p>
+          <p class="film__line">Made in Ras Al Khaimah. <em>Fitted by the people who built it.</em></p>
+        </div>
+
+        <div class="hero__foot mono" data-hero-fade>
+          <span>Build once.<br>Cook for decades.</span>
+          <span class="film__progress" aria-hidden="true"><i data-film-bar></i></span>
+          <span class="hero__scroll"><i></i>Scroll</span>
+        </div>
       </div>
     </section>
 
@@ -146,12 +162,12 @@
       </div>
 
       <ol class="why__list" data-why-list>
-        <li class="why__item" data-img="assets/img/all-steel-kitchen.webp">
+        <li class="why__item" data-img="assets/img/real-steel-led-run.webp">
           <span class="why__num">01</span>
           <h3>Durability</h3>
           <p>Resistant to corrosion, heat, moisture and impact — made for Gulf climates.</p>
         </li>
-        <li class="why__item" data-img="assets/img/gallery-steel-hob.webp">
+        <li class="why__item" data-img="assets/img/real-steel-sink.webp">
           <span class="why__num">02</span>
           <h3>Hygienic</h3>
           <p>A non-porous surface with nowhere for bacteria and germs to hide.</p>
@@ -230,16 +246,16 @@
       <div class="work__grid">
         <button class="shot shot--a" data-cursor="View" data-full="assets/img/bar-counter-warm.webp"><img src="assets/img/bar-counter-warm.webp" alt="Steel-topped breakfast bar with oak cabinets, warm under-lighting and a glass display cabinet" loading="lazy" width="2200" height="1469"><span class="shot__cap mono">Breakfast bar · steel top · oak</span></button>
         <button class="shot shot--b" data-cursor="View" data-full="assets/img/wine-wall.webp"><img src="assets/img/wine-wall.webp" alt="Glass-fronted wine wall beside a marble island" loading="lazy" width="1500" height="1002"><span class="shot__cap mono">Wine wall · marble</span></button>
-        <button class="shot shot--c" data-cursor="View" data-full="assets/img/gallery-amber-glass.webp"><img src="assets/img/gallery-amber-glass.webp" alt="Amber-lit glass shelving with timber panelling" loading="lazy" width="1159" height="786"><span class="shot__cap mono">Lit display shelving</span></button>
-        <button class="shot shot--d" data-cursor="View" data-full="assets/img/steel-oak-u-kitchen.webp"><img src="assets/img/steel-oak-u-kitchen.webp" alt="U-shaped kitchen with oak base units and a stainless steel counter" loading="lazy" width="1500" height="1002"><span class="shot__cap mono">Steel counter · oak base</span></button>
+        <button class="shot shot--c" data-cursor="View" data-full="assets/img/real-grey-l-kitchen.webp"><img src="assets/img/real-grey-l-kitchen.webp" alt="L-shaped kitchen with grey stone-look handle-less fronts, a dark worktop and timber louvre windows" loading="lazy" width="1800" height="831"><span class="shot__cap mono">Stone-look L kitchen</span></button>
+        <button class="shot shot--d" data-cursor="View" data-full="assets/img/real-white-oven-run.webp"><img src="assets/img/real-white-oven-run.webp" alt="White handle-less kitchen with a built-in black oven, gas hob and quartzite splashback" loading="lazy" width="1350" height="1800"><span class="shot__cap mono">White run · quartzite</span></button>
         <button class="shot shot--e" data-cursor="View" data-full="assets/img/gallery-steel-run.webp"><img src="assets/img/gallery-steel-run.webp" alt="Full stainless steel kitchen run with pull-out pantry" loading="lazy" width="1287" height="794"><span class="shot__cap mono">Full steel run · pantry</span></button>
-        <button class="shot shot--f" data-cursor="View" data-full="assets/img/gallery-bar-detail.webp"><img src="assets/img/gallery-bar-detail.webp" alt="Black steel frame of a breakfast bar with spice grinders" loading="lazy" width="1165" height="787"><span class="shot__cap mono">Black steel frame detail</span></button>
+        <button class="shot shot--f" data-cursor="View" data-full="assets/img/real-quartzite-sink.webp"><img src="assets/img/real-quartzite-sink.webp" alt="Undermount steel sink and black tap in a quartzite worktop under a garden window" loading="lazy" width="1350" height="1800"><span class="shot__cap mono">Quartzite · steel sink</span></button>
       </div>
     </section>
 
     <section class="marquee" aria-label="Rodos — crafted luxury kitchen">
       <div class="marquee__row" data-marquee>
-        <span>Crafted</span><img src="assets/img/gallery-steel-hob.webp" alt="" loading="lazy"><span><em>luxury</em></span><img src="assets/img/villa-gold-island.webp" alt="" loading="lazy"><span>Kitchen</span><img src="assets/img/wine-wall.webp" alt="" loading="lazy">
+        <span>Crafted</span><img src="assets/img/gallery-steel-hob.webp" alt="" loading="lazy"><span><em>luxury</em></span><img src="assets/img/real-marble-island-long.webp" alt="" loading="lazy"><span>Kitchen</span><img src="assets/img/wine-wall.webp" alt="" loading="lazy">
       </div>
     </section>
 
@@ -290,6 +306,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script>
-  <script type="module" src="js/main.js?v=12"></script>
+  <script type="module" src="js/main.js?v=14"></script>
 </body>
 </html>

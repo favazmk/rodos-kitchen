@@ -239,6 +239,33 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 .hero__scroll i::after { content: ""; position: absolute; inset: 0; background: var(--orange); animation: scrollcue 1.8s var(--ease) infinite; }
 @keyframes scrollcue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
 
+/* ---------- Film hero (scroll-scrubbed frame sequence) ---------- */
+.film { position: relative; height: 100svh; background: var(--paper); overflow: clip; }
+.film__media { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.film__poster, .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film__canvas { opacity: 0; }
+.film.is-live .film__canvas { opacity: 1; }
+.film__shade {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(12, 15, 11, 0.84) 0%, rgba(12, 15, 11, 0.58) 36%, rgba(12, 15, 11, 0.08) 68%, rgba(12, 15, 11, 0) 100%),
+    linear-gradient(0deg, rgba(12, 15, 11, 0.7) 0%, rgba(12, 15, 11, 0) 32%),
+    linear-gradient(180deg, rgba(12, 15, 11, 0.6) 0%, rgba(12, 15, 11, 0) 24%);
+}
+/* closes to the page colour at the end so the pin releases into the next section */
+.film__media::after { content: ""; position: absolute; inset: 0; background: var(--paper); opacity: var(--end, 0); }
+.film__ui {
+  position: relative; z-index: 2; height: 100%;
+  padding: calc(var(--nav-h) + 28px) var(--gutter) 28px;
+  display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: auto 1fr auto; column-gap: 20px;
+}
+.film__chapter { grid-column: 1 / span 7; grid-row: 2; align-self: center; visibility: hidden; opacity: 0; }
+.film__line { font-family: var(--f-serif); font-size: clamp(2.2rem, 4.6vw, 4.8rem); line-height: 1.02; letter-spacing: -0.02em; max-width: 15ch; margin-top: 20px; }
+.film__line em { color: var(--green); }
+.film__progress { flex: 0 1 220px; align-self: center; height: 1px; background: var(--line-light); position: relative; overflow: hidden; }
+.film__progress i { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: 0 50%; }
+.reduced .film__canvas, .reduced .film__chapter, .no-js .film__canvas { display: none; }
+
 /* ---------- Strip ---------- */
 .strip { position: relative; z-index: 2; background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .strip__list { display: grid; grid-template-columns: repeat(4, 1fr); }
@@ -592,6 +619,17 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
   .hero__img-wrap { flex: none; aspect-ratio: 4 / 3; }
   .hero__foot { grid-row: 4; }
   .hero__line { font-size: clamp(3.4rem, 19vw, 7rem); }
+
+  .film__ui { grid-template-rows: auto 1fr auto; }
+  .film .hero__copy { align-self: end; padding: 0 0 8px; }
+  .film__chapter { grid-column: 1 / -1; align-self: end; margin-bottom: 8px; }
+  .film__line { font-size: clamp(2.2rem, 10vw, 3.4rem); }
+  .film__progress { flex-basis: 90px; }
+  .film__shade {
+    background:
+      linear-gradient(0deg, rgba(12, 15, 11, 0.92) 0%, rgba(12, 15, 11, 0.66) 40%, rgba(12, 15, 11, 0) 72%),
+      linear-gradient(180deg, rgba(12, 15, 11, 0.6) 0%, rgba(12, 15, 11, 0) 22%);
+  }
 
   .strip__list { grid-template-columns: 1fr 1fr; }
   .strip__list li:nth-child(3) { border-left: 0; }
