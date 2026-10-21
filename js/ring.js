@@ -142,14 +142,14 @@ export function initRing(section, { gsap, ScrollTrigger }) {
   let hovered = null, front = -1;
 
   const snap = () => { const goal = target + scrollOffset; target = Math.round(goal / step) * step - scrollOffset; };
-  let snapTimer;
 
+  // page scroll keeps the ring turning slowly in the scroll's direction; a faster scroll nudges it a little faster
+  let dir = 1, boost = 0;
   const st = ScrollTrigger.create({
     trigger: stage, start: 'top bottom', end: 'bottom top',
     onUpdate: (s) => {
-      scrollOffset = (s.progress - scrollBase) * Math.PI * 1.1;
-      clearTimeout(snapTimer);
-      snapTimer = setTimeout(snap, 160);
+      dir = s.direction;
+      boost = Math.min(Math.abs(s.getVelocity()) / 2500, 1);
     },
   });
 
@@ -245,6 +245,9 @@ export function initRing(section, { gsap, ScrollTrigger }) {
 
   gsap.ticker.add((time) => {
     if (!onScreen || section.classList.contains('is-grid')) return;
+    // slow drift, paused while a card is hovered or dragged so it stays easy to pick
+    if (!dragging && !hovered) target += dir * (0.0011 + boost * 0.009) * gsap.ticker.deltaRatio();
+    boost *= 0.94;
     const goal = target + scrollOffset;
     const prev = current;
     current += (goal - current) * 0.075;

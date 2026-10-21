@@ -551,7 +551,7 @@ if (gallery) {
   // ring on top, full grid underneath; without WebGL only the grid shows
   const setView = (v) => { gallery.classList.toggle('is-grid', v === 'grid'); ScrollTrigger.refresh(); };
   if (gl && !reduced) {
-    import('./ring.js?v=12')
+    import('./ring.js?v=13')
       .then((m) => m.initRing(gallery, { gsap, ScrollTrigger }))
       .catch((err) => { console.error(err); root.classList.add('no-ring'); setView('grid'); });
   } else {
@@ -563,7 +563,7 @@ if (gallery) {
 /* Home — selected work on the same 3D ring as the projects page */
 const workRing = $('[data-work-ring]');
 if (workRing && gl && !reduced) {
-  import('./ring.js?v=12')
+  import('./ring.js?v=13')
     .then((m) => { m.initRing(workRing, { gsap, ScrollTrigger }); workRing.classList.add('has-ring'); ScrollTrigger.refresh(); })
     .catch((err) => { console.error(err); root.classList.add('no-ring'); });
 } else if (workRing) root.classList.add('no-ring');
