@@ -136,9 +136,9 @@ function setupFilm() {
     const order = [...Array(COUNT).keys()].sort((a, b) => (a % 8 ? 1 : 0) - (b % 8 ? 1 : 0) || a - b);
     order.forEach((i) => {
       const img = new Image();
-      img.decoding = 'async';
-      img.onload = () => { list[i] = img; if (list === frames && Math.abs(i - want) < 8) draw(); };
       img.src = `assets/film/${key}/${String(i + 1).padStart(3, '0')}.webp?v=2`;
+      // decoded off the main thread before use, so drawing a frame mid-scroll never stalls on a decode
+      img.decode().then(() => { list[i] = img; if (list === frames && Math.abs(i - want) < 8) draw(); }).catch(() => {});
     });
     return list;
   };
@@ -533,7 +533,7 @@ setupFilters();
 const anatomy = $('[data-anatomy]');
 const gl = document.createElement('canvas').getContext('webgl2');
 if (anatomy && gl) {
-  import('./kitchen3d.js?v=9')
+  import('./kitchen3d.js?v=10')
     .then((m) => {
       m.initKitchen(anatomy, { reduced, gsap, ScrollTrigger });
       // the 3D pin is created after later sections' triggers: re-order and recalc
@@ -551,7 +551,7 @@ if (gallery) {
   // ring on top, full grid underneath; without WebGL only the grid shows
   const setView = (v) => { gallery.classList.toggle('is-grid', v === 'grid'); ScrollTrigger.refresh(); };
   if (gl && !reduced) {
-    import('./ring.js?v=13')
+    import('./ring.js?v=14')
       .then((m) => m.initRing(gallery, { gsap, ScrollTrigger }))
       .catch((err) => { console.error(err); root.classList.add('no-ring'); setView('grid'); });
   } else {
@@ -563,7 +563,7 @@ if (gallery) {
 /* Home — selected work on the same 3D ring as the projects page */
 const workRing = $('[data-work-ring]');
 if (workRing && gl && !reduced) {
-  import('./ring.js?v=13')
+  import('./ring.js?v=14')
     .then((m) => { m.initRing(workRing, { gsap, ScrollTrigger }); workRing.classList.add('has-ring'); ScrollTrigger.refresh(); })
     .catch((err) => { console.error(err); root.classList.add('no-ring'); });
 } else if (workRing) root.classList.add('no-ring');

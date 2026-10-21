@@ -72,14 +72,15 @@ export function initRing(section, { gsap, ScrollTrigger }) {
   const cells = [...section.querySelectorAll('.pcell')];
   const items = cells.map((cell, i) => ({
     cell, i,
-    src: cell.dataset.full,
+    // the card-size copy from the grid's srcset; the lightbox still opens the full photo
+    src: cell.querySelector('img').getAttribute('srcset')?.split(' ')[0] || cell.dataset.full,
     cat: cell.dataset.cat,
     title: cell.querySelector('.shot__cap').textContent.trim(),
   }));
   const N = items.length;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
   const ring = new THREE.Group();
@@ -90,7 +91,25 @@ export function initRing(section, { gsap, ScrollTrigger }) {
   const W = 1.6, H = 1.2;
   const R = (N * W) / (TAU * 0.86);
   const geo = new THREE.CylinderGeometry(R, R, H, 40, 1, true, -W / R / 2, W / R);
-  const loader = new THREE.TextureLoader();
+  // Photos are decoded off the main thread, shrunk to card size and sent to the GPU one per frame:
+  // 28 full-size uploads at once froze scrolling for 1–2 s
+  const maxAniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+  const uploads = [];
+  function loadTexture(src, done) {
+    const img = new Image();
+    img.src = src;
+    img.decode().then(() => {
+      const s = Math.min(1, 1024 / img.naturalWidth);
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * s);
+      c.height = Math.round(img.naturalHeight * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      const t = new THREE.CanvasTexture(c);
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = maxAniso;
+      uploads.push(() => { renderer.initTexture(t); done(t, c.width / c.height); });
+    }).catch(() => {});
+  }
 
   items.forEach((it) => {
     const uniforms = {
@@ -104,11 +123,9 @@ export function initRing(section, { gsap, ScrollTrigger }) {
     pivot.add(mesh);
     ring.add(pivot);
     Object.assign(it, { mesh, pivot, uniforms });
-    loader.load(it.src, (t) => {
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    loadTexture(it.src, (t, aspect) => {
       uniforms.uMap.value = t;
-      uniforms.uImgAspect.value = t.image.width / t.image.height;
+      uniforms.uImgAspect.value = aspect;
       gsap.to(uniforms.uLoaded, { value: 1, duration: 1.2, ease: 'power2.out' });
     });
   });
@@ -244,6 +261,7 @@ export function initRing(section, { gsap, ScrollTrigger }) {
   new IntersectionObserver(([e]) => (onScreen = e.isIntersecting)).observe(stage);
 
   gsap.ticker.add((time) => {
+    uploads.shift()?.();
     if (!onScreen || section.classList.contains('is-grid')) return;
     // slow drift, paused while a card is hovered or dragged so it stays easy to pick
     if (!dragging && !hovered) target += dir * (0.0011 + boost * 0.009) * gsap.ticker.deltaRatio();
@@ -271,5 +289,7 @@ export function initRing(section, { gsap, ScrollTrigger }) {
   });
 
   layout('all', false);
+  // compile the shader now, off the scroll path
+  renderer.compileAsync?.(scene, camera).catch(() => {});
   ScrollTrigger.refresh();
 }
