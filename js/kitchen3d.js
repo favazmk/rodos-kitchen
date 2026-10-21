@@ -294,6 +294,11 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
     { p: new THREE.Vector3(0.3, topY - 0.03, 0.46), t: 'Integrated LED' },
   ];
 
+  // render-loop state: declared before the ScrollTrigger, whose onUpdate fires at creation when the page loads mid-section
+  let visible = false;
+  let until = 0;
+  function invalidate(sec = 0.1) { until = Math.max(until, performance.now() + sec * 1000); }
+
   let step = -1;
   function setStep(i) {
     if (i === step) return;
@@ -391,9 +396,6 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   new ResizeObserver(resize).observe(stage);
 
   /* ---------- Render loop (only while visible / changing) ---------- */
-  let visible = false;
-  let until = 0;
-  function invalidate(sec = 0.1) { until = Math.max(until, performance.now() + sec * 1000); }
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; invalidate(); }).observe(section);
 
   const v = new THREE.Vector3();
