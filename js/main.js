@@ -213,8 +213,9 @@ if (!reduced) {
   // steps: each card settles back and dims as the next one stacks over it
   const steps = $$('.step');
   steps.slice(0, -1).forEach((card, i) =>
-    gsap.to(card, {
-      scale: 0.94, filter: 'brightness(0.55)', ease: 'none',
+    // explicit start: GSAP reads the default filter "none" as brightness(0), so the card would flash black
+    gsap.fromTo(card, { filter: 'brightness(1)' }, {
+      scale: 0.94, filter: 'brightness(0.55)', ease: 'none', immediateRender: false,
       scrollTrigger: { trigger: steps[i + 1], start: 'top 75%', end: 'top 20%', scrub: true },
     })
   );
@@ -267,7 +268,8 @@ function setupReveals() {
   /* Statement: words light up as you read */
   const st = $('[data-words]');
   if (st) {
-    const split = SplitText.create(st, { type: 'words', wordsClass: 'w' });
+    // aria: 'none' — words stay readable as text; the default aria-label isn't allowed on a <p>
+    const split = SplitText.create(st, { type: 'words', wordsClass: 'w', aria: 'none' });
     gsap.to(split.words, {
       opacity: 1, stagger: 0.1, ease: 'none',
       scrollTrigger: { trigger: st, start: 'top 78%', end: 'bottom 45%', scrub: true },
@@ -533,7 +535,7 @@ setupFilters();
 const anatomy = $('[data-anatomy]');
 const gl = document.createElement('canvas').getContext('webgl2');
 if (anatomy && gl) {
-  import('./kitchen3d.js?v=10')
+  import('./kitchen3d.js?v=11')
     .then((m) => {
       m.initKitchen(anatomy, { reduced, gsap, ScrollTrigger });
       // the 3D pin is created after later sections' triggers: re-order and recalc
