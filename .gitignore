@@ -1,5 +1,6 @@
 # Client source material (not part of the site)
 *.pdf
+assets/real/
 
 # Local tooling
 .claude/
