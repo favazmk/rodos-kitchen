@@ -138,7 +138,7 @@ function setupFilm() {
       const img = new Image();
       img.decoding = 'async';
       img.onload = () => { list[i] = img; if (list === frames && Math.abs(i - want) < 8) draw(); };
-      img.src = `assets/film/${key}/${String(i + 1).padStart(3, '0')}.webp`;
+      img.src = `assets/film/${key}/${String(i + 1).padStart(3, '0')}.webp?v=2`;
     });
     return list;
   };
@@ -170,21 +170,59 @@ function setupFilm() {
     defaults: { ease: 'none' },
     scrollTrigger: {
       trigger: film, start: 'top top', end: () => '+=' + innerHeight * 3,
-      pin: true, scrub: true, anticipatePin: 1, invalidateOnRefresh: true,
-      onUpdate: (s) => { want = Math.round(Math.min(s.progress / 0.94, 1) * (COUNT - 1)); draw(); },
+      // measured before the 3D pin (priority 1), which sits below this one's spacing
+      pin: true, scrub: true, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 2,
+      onUpdate: (s) => { want = Math.round(s.progress * (COUNT - 1)); draw(); },
     },
   });
   tl.fromTo('[data-film-bar]', { scaleX: 0 }, { scaleX: 1, duration: 1 }, 0)
-    .to('[data-film-intro]', { autoAlpha: 0, y: -60, duration: 0.12 }, 0.08);
+    .to('[data-film-intro]', { autoAlpha: 0, y: -60, duration: 0.12 }, 0.12);
   $$('[data-film-chapter]', film).forEach((el) => {
     const [a, b] = el.dataset.filmChapter.split(',').map(Number);
-    tl.fromTo(el, { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 0.08 }, a)
-      .to(el, { autoAlpha: 0, y: -50, duration: 0.08 }, b - 0.08);
+    tl.fromTo(el, { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 0.07 }, a);
+    if (b < 1) tl.to(el, { autoAlpha: 0, y: -50, duration: 0.07 }, b - 0.07); // the last one stays on the final frame
   });
-  // close to the page colour so the pin releases into the strip below
-  tl.fromTo('.film__media', { '--end': 0 }, { '--end': 1, duration: 0.08 }, 0.92);
 }
 setupFilm();
+
+/* Glass stat cards rise over the film; statement photo pills open as they're read */
+if (!reduced) {
+  const stats = $$('[data-stats] li');
+  if (stats.length) gsap.from(stats, { y: 80, opacity: 0, stagger: 0.08, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '[data-stats]', start: 'top 98%' } });
+  // statement photos: a large preview follows the pointer over each pill (click opens the lightbox)
+  if (finePointer) {
+    const zoom = document.createElement('div');
+    zoom.className = 'pill-zoom';
+    zoom.setAttribute('aria-hidden', 'true');
+    zoom.innerHTML = '<img alt="">';
+    document.body.append(zoom);
+    const zImg = $('img', zoom);
+    const zx = gsap.quickTo(zoom, 'x', { duration: 0.5, ease: 'power3' });
+    const zy = gsap.quickTo(zoom, 'y', { duration: 0.5, ease: 'power3' });
+    $$('[data-pill]').forEach((pill) => {
+      pill.addEventListener('pointerenter', (e) => {
+        zImg.src = $('img', pill).currentSrc || $('img', pill).src;
+        gsap.set(zoom, { x: e.clientX, y: e.clientY });
+        gsap.to(zoom, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out', overwrite: 'auto' });
+      });
+      pill.addEventListener('pointermove', (e) => { zx(e.clientX); zy(e.clientY); });
+      pill.addEventListener('pointerleave', () => gsap.to(zoom, { opacity: 0, scale: 0.6, duration: 0.35, ease: 'power3.in', overwrite: 'auto' }));
+    });
+    addEventListener('scroll', () => gsap.to(zoom, { opacity: 0, scale: 0.6, duration: 0.3, overwrite: 'auto' }), { passive: true });
+  }
+  // steps: each card settles back and dims as the next one stacks over it
+  const steps = $$('.step');
+  steps.slice(0, -1).forEach((card, i) =>
+    gsap.to(card, {
+      scale: 0.94, filter: 'brightness(0.55)', ease: 'none',
+      scrollTrigger: { trigger: steps[i + 1], start: 'top 75%', end: 'top 20%', scrub: true },
+    })
+  );
+  $$('[data-pill]').forEach((pill) =>
+    // scale, not width: a width change reflows the paragraph and shifts every pin below it
+    gsap.from(pill, { scale: 0, ease: 'none', scrollTrigger: { trigger: pill, start: 'top 85%', end: 'top 60%', scrub: true } })
+  );
+}
 /* Inner pages: hero image closes in (scales down, rounds) as it scrolls away */
 if (!reduced && $('.phero')) {
   gsap.to('.phero .hero__img-wrap', { scale: 0.9, borderRadius: 28, ease: 'none', scrollTrigger: { trigger: '.phero__media', start: 'top 30%', end: 'bottom top', scrub: true } });
@@ -495,7 +533,7 @@ setupFilters();
 const anatomy = $('[data-anatomy]');
 const gl = document.createElement('canvas').getContext('webgl2');
 if (anatomy && gl) {
-  import('./kitchen3d.js?v=8')
+  import('./kitchen3d.js?v=9')
     .then((m) => {
       m.initKitchen(anatomy, { reduced, gsap, ScrollTrigger });
       // the 3D pin is created after later sections' triggers: re-order and recalc
@@ -521,6 +559,14 @@ if (gallery) {
     setView('grid');
   }
 }
+
+/* Home — selected work on the same 3D ring as the projects page */
+const workRing = $('[data-work-ring]');
+if (workRing && gl && !reduced) {
+  import('./ring.js?v=12')
+    .then((m) => { m.initRing(workRing, { gsap, ScrollTrigger }); workRing.classList.add('has-ring'); ScrollTrigger.refresh(); })
+    .catch((err) => { console.error(err); root.classList.add('no-ring'); });
+} else if (workRing) root.classList.add('no-ring');
 
 addEventListener('load', () => {
   ScrollTrigger.refresh();

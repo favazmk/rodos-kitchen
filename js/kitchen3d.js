@@ -132,7 +132,16 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   const model = new THREE.Group();
   scene.add(model);
 
-  const carcass = mesh(new RoundedBoxGeometry(W - 0.02, carcH, Dc, 3, 0.008), steel, model, [0, kick + carcH / 2, 0]);
+  // Carcass: an open-fronted steel box with column dividers, so pulled drawers show real bays behind them
+  const carcass = new THREE.Group();
+  model.add(carcass);
+  const t = 0.018, cy = kick + carcH / 2, inner = W - 0.02 - t * 2;
+  mesh(new THREE.BoxGeometry(t, carcH, Dc), steel, carcass, [-(W - 0.02) / 2 + t / 2, cy, 0]);
+  mesh(new THREE.BoxGeometry(t, carcH, Dc), steel, carcass, [(W - 0.02) / 2 - t / 2, cy, 0]);
+  mesh(new THREE.BoxGeometry(inner, t, Dc), steel, carcass, [0, kick + t / 2, 0]);
+  mesh(new THREE.BoxGeometry(inner, t, Dc), steel, carcass, [0, kick + carcH - t / 2, 0]);
+  mesh(new THREE.BoxGeometry(inner, carcH - t * 2, t), darkSteel, carcass, [0, cy, -Dc / 2 + t / 2]);
+  for (let i = 1; i < 4; i++) mesh(new THREE.BoxGeometry(t * 0.6, carcH - t * 2, Dc - t), steel, carcass, [-(W - 0.02) / 2 + i * (W - 0.02) / 4, cy, t / 2]);
   const toe = mesh(new THREE.BoxGeometry(W - 0.1, kick, Dc - 0.08), darkSteel, model, [0, kick / 2, -0.04]);
 
   // Drawers: 4 columns
@@ -260,8 +269,8 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
     .to(sink.position, { y: 0, duration: 1.1 }, 4.75)
     .to(rig, { theta: 0.62, phi: 0.95, r: 6.2, ty: 0.55, duration: 2 }, 4);
   // 4 · drawers glide open (6 → 8)
-  const openers = drawers.filter((d) => d.ri > 0 || d.ci === 0);
-  openers.forEach((d, i) => tl.to(d.g.position, { z: d.home.z + 0.3 + (d.ri === 1 ? 0.12 : 0), duration: 0.9, ease: 'power2.out' }, 6 + i * 0.08));
+  const openers = drawers; // every drawer opens — none left looking shut
+  openers.forEach((d, i) => tl.to(d.g.position, { z: d.home.z + 0.24 + d.ri * 0.08, duration: 0.9, ease: 'power2.out' }, 6 + i * 0.06));
   tl.to(rig, { theta: -0.28, phi: 1.22, r: 5.8, ty: 0.5, duration: 2 }, 6);
   // 5 · the light (8 → 10)
   openers.forEach((d, i) => tl.to(d.g.position, { z: d.home.z, duration: 0.8, ease: 'power2.inOut' }, 8 + i * 0.04));
@@ -412,4 +421,6 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   }
   gsap.ticker.add(render);
   resize();
+  // compile shaders now, off the scroll path, instead of on the first visible frame
+  if (renderer.compileAsync) renderer.compileAsync(scene, camera).then(() => renderer.render(scene, camera)).catch(() => {});
 }
