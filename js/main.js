@@ -8,6 +8,9 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(pointer: fine)').matches;
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+// pointer-following previews: keep a box of `size` between `min` (e.g. under the nav) and the viewport edge
+const navH = () => Math.max(0, $('[data-nav]')?.getBoundingClientRect().bottom || 0);
+const inView = (v, size, max, min = 0) => Math.max(min + 8, Math.min(max - size - 8, v));
 
 root.classList.add('js');
 if (reduced) root.classList.add('reduced');
@@ -199,13 +202,20 @@ if (!reduced) {
     const zImg = $('img', zoom);
     const zx = gsap.quickTo(zoom, 'x', { duration: 0.5, ease: 'power3' });
     const zy = gsap.quickTo(zoom, 'y', { duration: 0.5, ease: 'power3' });
+    // above the pointer, or below it when the nav would cover it
+    const at = (e) => {
+      const w = zoom.offsetWidth, h = zoom.offsetHeight;
+      const y = e.clientY - h - 28 < navH() + 12 ? e.clientY + 28 : e.clientY - h - 28;
+      return [inView(e.clientX - w / 2, w, innerWidth), inView(y, h, innerHeight, navH())];
+    };
     $$('[data-pill]').forEach((pill) => {
       pill.addEventListener('pointerenter', (e) => {
         zImg.src = $('img', pill).currentSrc || $('img', pill).src;
-        gsap.set(zoom, { x: e.clientX, y: e.clientY });
+        const [x, y] = at(e);
+        gsap.set(zoom, { x, y });
         gsap.to(zoom, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out', overwrite: 'auto' });
       });
-      pill.addEventListener('pointermove', (e) => { zx(e.clientX); zy(e.clientY); });
+      pill.addEventListener('pointermove', (e) => { const [x, y] = at(e); zx(x); zy(y); });
       pill.addEventListener('pointerleave', () => gsap.to(zoom, { opacity: 0, scale: 0.6, duration: 0.35, ease: 'power3.in', overwrite: 'auto' }));
     });
     addEventListener('scroll', () => gsap.to(zoom, { opacity: 0, scale: 0.6, duration: 0.3, overwrite: 'auto' }), { passive: true });
@@ -372,24 +382,32 @@ function followPreview(listSel, itemSel, previewSel, mode) {
   const rTo = gsap.quickTo(box, 'rotation', { duration: 0.8, ease: 'power3' });
   let px = 0;
   addEventListener('pointermove', (e) => {
-    xTo(e.clientX); yTo(e.clientY);
+    // beside the pointer, flipped to its left near the right edge, always inside the viewport
+    const w = box.offsetWidth, h = box.offsetHeight;
+    xTo(e.clientX + 30 + w > innerWidth - 8 ? e.clientX - 30 - w : e.clientX + 30);
+    yTo(inView(e.clientY - h / 2, h, innerHeight, navH()));
     rTo(gsap.utils.clamp(-10, 10, (e.clientX - px) * 0.6)); px = e.clientX;
   });
-  $$(itemSel, list).forEach((item) => {
-    item.addEventListener('pointerenter', () => {
-      if (img.getAttribute('src') !== item.dataset.img) img.src = item.dataset.img;
-      if (mode === 'clip') gsap.to(box, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'expo.out', overwrite: 'auto' });
-      else gsap.to(box, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out', overwrite: 'auto' });
-      gsap.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 0.9, ease: 'expo.out' });
-    });
-  });
+  let current = null;
+  const show = (item) => {
+    if (item === current) return;
+    current = item;
+    if (img.getAttribute('src') !== item.dataset.img) img.src = item.dataset.img;
+    if (mode === 'clip') gsap.to(box, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'expo.out', overwrite: 'auto' });
+    else gsap.to(box, { opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out', overwrite: 'auto' });
+    gsap.fromTo(img, { scale: 1.25 }, { scale: 1, duration: 0.9, ease: 'expo.out' });
+  };
+  // pointermove, not pointerenter: after a scroll hides the preview, moving the mouse brings it back
+  $$(itemSel, list).forEach((item) => item.addEventListener('pointermove', () => show(item)));
   const hide = () => {
+    if (!current) return;
+    current = null;
     if (mode === 'clip') gsap.to(box, { clipPath: 'inset(50% 50% 50% 50%)', duration: 0.5, ease: 'expo.inOut', overwrite: 'auto' });
     else gsap.to(box, { opacity: 0, scale: 0.6, duration: 0.4, ease: 'power3.in', overwrite: 'auto' });
   };
   list.addEventListener('pointerleave', hide);
-  // scrolling away without moving the mouse never fires pointerleave
-  addEventListener('scroll', () => !list.matches(':hover') && hide(), { passive: true });
+  // the page slides under a still pointer while scrolling and :hover goes stale, so any scroll hides it
+  addEventListener('scroll', hide, { passive: true });
 }
 
 /* ---------- Magnetic buttons ---------- */
@@ -535,7 +553,7 @@ setupFilters();
 const anatomy = $('[data-anatomy]');
 const gl = document.createElement('canvas').getContext('webgl2');
 if (anatomy && gl) {
-  import('./kitchen3d.js?v=11')
+  import('./kitchen3d.js?v=12')
     .then((m) => {
       m.initKitchen(anatomy, { reduced, gsap, ScrollTrigger });
       // the 3D pin is created after later sections' triggers: re-order and recalc

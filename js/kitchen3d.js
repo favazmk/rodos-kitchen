@@ -95,7 +95,7 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   const key = new THREE.DirectionalLight(0xfff4e6, 2.2);
   key.position.set(3, 6, 4);
   key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.mapSize.set(1024, 1024); // redrawn every frame while scrolling; 2048 cost more than it showed
   Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: 1, far: 15 });
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
@@ -430,6 +430,13 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   }
   gsap.ticker.add(render);
   resize();
-  // compile shaders now, off the scroll path, instead of on the first visible frame
-  if (renderer.compileAsync) renderer.compileAsync(scene, camera).then(() => renderer.render(scene, camera)).catch(() => {});
+  // compile shaders now, off the scroll path, instead of on the first visible frame.
+  // The warm-up frame includes the shadow pass (its depth shaders aren't covered by compileAsync)
+  // and uploads the oak texture, so neither entering the section nor the first finish switch stalls.
+  const warm = () => {
+    renderer.initTexture(woodTex);
+    renderer.shadowMap.needsUpdate = true;
+    renderer.render(scene, camera);
+  };
+  (renderer.compileAsync ? renderer.compileAsync(scene, camera) : Promise.resolve()).then(warm).catch(() => {});
 }
