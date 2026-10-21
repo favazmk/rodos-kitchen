@@ -77,10 +77,11 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   const pinText = pin.querySelector('span');
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
   renderer.shadowMap.enabled = true;
+  renderer.shadowMap.autoUpdate = false; // redrawn only when the model changes, not for the idle float
   renderer.shadowMap.type = THREE.PCFShadowMap;
   RectAreaLightUniformsLib.init();
 
@@ -396,10 +397,16 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; invalidate(); }).observe(section);
 
   const v = new THREE.Vector3();
+  let lastIdle = 0;
   function render(time) {
     if (!visible) return;
-    const idle = !reduced; // keep a gentle float alive while on screen
-    if (!idle && performance.now() > until) return;
+    const changing = performance.now() <= until;
+    // nothing changing: keep the gentle float alive at 30fps (none with reduced motion)
+    if (!changing) {
+      if (reduced || time - lastIdle < 1 / 30) return;
+      lastIdle = time;
+    }
+    renderer.shadowMap.needsUpdate = changing;
 
     model.rotation.y = tilt.x * 0.22;
     model.position.y = reduced ? 0 : Math.sin(time * 0.8) * 0.012;
