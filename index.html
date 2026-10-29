@@ -13,10 +13,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/film/d/001.webp?v=2" media="(orientation: landscape)">
-  <link rel="preload" as="image" href="assets/film/m/001.webp?v=2" media="(orientation: portrait)">
+  <link rel="preload" as="image" href="assets/film/d/001.webp?v=4" media="(orientation: landscape)">
+  <link rel="preload" as="image" href="assets/film/m/001.webp?v=4" media="(orientation: portrait)">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css" integrity="sha384-gvLq/iOMNnPchdosgVym5huSVkKipHCQaqSw2Eg0V52Mzmlf169ZOsXcNc2cNu8x" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/style.css?v=22">
+  <link rel="stylesheet" href="css/style.css?v=24">
   <script type="importmap">
     {
       "imports": {
@@ -71,19 +71,19 @@
 
   <main id="main">
 
-    <!-- Hero: a walk through the door into a finished kitchen, scrubbed by scroll -->
+    <!-- Hero: a drone flight from the tower, through the balcony doors, into a finished kitchen, scrubbed by scroll -->
     <section class="film" id="top" data-film>
       <div class="film__media" aria-hidden="true">
         <picture>
-          <source media="(orientation: portrait)" srcset="assets/film/m/001.webp?v=2" width="720" height="1280">
-          <img class="film__poster" src="assets/film/d/001.webp?v=2" alt="" width="1600" height="900" fetchpriority="high">
+          <source media="(orientation: portrait)" srcset="assets/film/m/001.webp?v=4" width="720" height="1280">
+          <img class="film__poster" src="assets/film/d/001.webp?v=4" alt="" width="1600" height="900" fetchpriority="high">
         </picture>
         <canvas class="film__canvas"></canvas>
         <div class="film__shade"></div>
       </div>
 
       <div class="film__ui">
-        <!-- the door, the reveal, the walk-through, then the last frame closes on a call to action -->
+        <!-- the tower, the balcony, the kitchen, then the last frame closes on a call to action -->
         <div class="hero__copy" data-film-intro>
           <h1 class="hero__title">
             <span class="hero__line"><span>Step inside</span></span>
@@ -125,12 +125,13 @@
     </section>
 
     <!-- At a glance: frosted glass cards that rise over the last frame of the film -->
-    <section class="strip" aria-label="At a glance">
+    <!-- At a glance: an editorial ledger set on the page's four guide lines -->
+    <section class="strip guides" aria-label="At a glance">
       <ul class="strip__list" data-stats>
-        <li><span class="mono">01</span><b data-count="20" data-suffix="+">0</b><span>Years of kitchen craftsmanship</span></li>
-        <li><span class="mono">02</span><b>In‑house</b><span>Factory at Al Ghail, Ras Al Khaimah</span></li>
-        <li><span class="mono">03</span><b>De Dietrich</b><span>Built‑in appliance partner</span></li>
-        <li><span class="mono">04</span><b>UAE · GCC</b><span>Dubai to Doha, Abu Dhabi to Muscat</span></li>
+        <li><span class="strip__k mono"><i>01</i>Experience</span><b data-count="20" data-suffix="+">0</b><span class="strip__d">Years of kitchen craftsmanship</span></li>
+        <li><span class="strip__k mono"><i>02</i>Factory</span><b>In‑house</b><span class="strip__d">Al Ghail, Ras Al Khaimah</span></li>
+        <li><span class="strip__k mono"><i>03</i>Appliances</span><b>De Dietrich</b><span class="strip__d">Built‑in appliance partner</span></li>
+        <li><span class="strip__k mono"><i>04</i>Reach</span><b>UAE <em>&amp;</em> GCC</b><span class="strip__d">Dubai to Doha, Abu Dhabi to Muscat</span></li>
       </ul>
     </section>
 
@@ -139,25 +140,30 @@
       <p class="intro__statement" data-words>
         The kitchen is the one room <span class="pill" data-pill data-full="assets/img/real-white-oven-run.webp"><img src="assets/img/real-white-oven-run.webp" srcset="assets/img/real-white-oven-run-960.webp 960w, assets/img/real-white-oven-run.webp 1350w" sizes="(max-width: 700px) 100vw, 45vw" alt="White handle-less kitchen with a built-in oven, gas hob and quartzite splashback" loading="lazy" width="1350" height="1800"></span> your home uses every single day. So we build ours from the material professional chefs trust — stainless steel <span class="pill" data-pill data-full="assets/img/real-steel-sink.webp"><img src="assets/img/real-steel-sink.webp" srcset="assets/img/real-steel-sink-960.webp 960w, assets/img/real-steel-sink.webp 1200w" sizes="(max-width: 700px) 100vw, 45vw" alt="Double stainless steel sink welded into a steel worktop" loading="lazy" width="1200" height="1600"></span> — and finish it as warmly as the rest of your home <span class="pill" data-pill data-full="assets/img/real-gold-bar-front.webp"><img src="assets/img/real-gold-bar-front.webp" srcset="assets/img/real-gold-bar-front-960.webp 960w, assets/img/real-gold-bar-front.webp 1448w" sizes="(max-width: 700px) 100vw, 45vw" alt="Oak breakfast bar with three gold wire stools" loading="lazy" width="1448" height="1086"></span>
       </p>
+      <!-- text on the left; the photo at its own landscape shape on the right, a detail shot laid over its corner -->
       <div class="intro__grid">
-        <figure class="intro__img intro__img--tall" data-clip>
-          <img src="assets/img/tall-oven-unit.webp" srcset="assets/img/tall-oven-unit-960.webp 960w, assets/img/tall-oven-unit.webp 1500w" sizes="(max-width: 700px) 100vw, 45vw" alt="Tall black cabinetry with built-in ovens beside an oak wine rack and glass display" loading="lazy" width="1500" height="1102" data-speed="0.92">
-        </figure>
-        <div class="intro__side">
-          <div class="intro__text">
-            <h2 class="h2" data-split>Compact layouts to gourmet villa kitchens.</h2>
-            <p data-reveal>With over 20 years behind us, we blend artistic vision with engineering precision. Every kitchen is tailored to the people who cook in it — the way you move, store, host and clean.</p>
-            <dl class="intro__facts" data-reveal>
-              <div><dt class="mono">Signature material</dt><dd>Stainless steel, inside and out</dd></div>
-              <div><dt class="mono">Made</dt><dd>Locally, to international standards</dd></div>
-              <div><dt class="mono">Built for</dt><dd>Gulf heat, humidity and family life</dd></div>
-            </dl>
-          </div>
+        <div class="intro__text">
+          <h2 class="h2" data-split>Compact layouts to gourmet villa kitchens.</h2>
+          <p data-reveal>With over 20 years behind us, we blend artistic vision with engineering precision. Every kitchen is tailored to the people who cook in it — the way you move, store, host and clean.</p>
+          <dl class="intro__facts" data-reveal>
+            <div><dt class="mono"><i>01</i>Signature material</dt><dd>Stainless steel, <em>inside and out</em></dd></div>
+            <div><dt class="mono"><i>02</i>Made</dt><dd>Locally, <em>to international standards</em></dd></div>
+            <div><dt class="mono"><i>03</i>Built for</dt><dd>Gulf heat, humidity <em>and family life</em></dd></div>
+          </dl>
+          <a class="u-link intro__more" href="kitchens.html" data-reveal>Explore our kitchens ↗</a>
+        </div>
+        <div class="intro__media">
+          <figure class="intro__main">
+            <div class="intro__img intro__img--main" data-clip>
+              <img src="assets/img/tall-oven-unit.webp" srcset="assets/img/tall-oven-unit-960.webp 960w, assets/img/tall-oven-unit.webp 1500w" sizes="(max-width: 900px) 100vw, 55vw" alt="Tall black cabinetry with built-in ovens beside an oak wine rack and glass display" loading="lazy" width="1500" height="1102" data-speed="0.94">
+            </div>
+            <figcaption class="mono"><span>Fig. 01</span>Oven tower beside an oak bar cabinet</figcaption>
+          </figure>
           <figure class="intro__detail">
             <div class="intro__img intro__img--small" data-clip>
-              <img src="assets/img/marble-detail-glasses.webp" srcset="assets/img/marble-detail-glasses-960.webp 960w, assets/img/marble-detail-glasses.webp 1500w" sizes="(max-width: 700px) 100vw, 30vw" alt="Red wine glasses on a steel drying rack set into a marble worktop" loading="lazy" width="1500" height="1024" data-speed="1.06">
+              <img src="assets/img/marble-detail-glasses.webp" srcset="assets/img/marble-detail-glasses-960.webp 960w, assets/img/marble-detail-glasses.webp 1500w" sizes="(max-width: 900px) 60vw, 24vw" alt="Red wine glasses on a steel drying rack set into a marble worktop" loading="lazy" width="1500" height="1024" data-speed="1.06">
             </div>
-            <figcaption class="mono">Steel drying rack, set flush in marble</figcaption>
+            <figcaption class="mono"><span>Fig. 02</span>Steel drying rack, set flush in marble</figcaption>
           </figure>
         </div>
       </div>
@@ -370,6 +376,6 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script>
-  <script type="module" src="js/main.js?v=24"></script>
+  <script type="module" src="js/main.js?v=26"></script>
 </body>
 </html>

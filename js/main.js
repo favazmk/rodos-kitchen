@@ -139,7 +139,7 @@ function setupFilm() {
     const order = [...Array(COUNT).keys()].sort((a, b) => (a % 8 ? 1 : 0) - (b % 8 ? 1 : 0) || a - b);
     order.forEach((i) => {
       const img = new Image();
-      img.src = `assets/film/${key}/${String(i + 1).padStart(3, '0')}.webp?v=2`;
+      img.src = `assets/film/${key}/${String(i + 1).padStart(3, '0')}.webp?v=4`;
       // decoded off the main thread before use, so drawing a frame mid-scroll never stalls on a decode
       img.decode().then(() => { list[i] = img; if (list === frames && Math.abs(i - want) < 8) draw(); }).catch(() => {});
     });
