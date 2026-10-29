@@ -666,7 +666,7 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 .footer__base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: rgba(239, 236, 230, 0.5); border-top: 1px solid var(--line-light); padding-top: 18px; }
 .footer__credit { color: inherit; transition: color 0.3s; }
 .footer__credit b { font-weight: 500; color: var(--cream); transition: color 0.3s; }
-.footer__credit:hover, .footer__credit:hover b, .footer__credit:focus-visible, .footer__credit:focus-visible b { color: #a855f7; }
+.footer__credit:hover b, .footer__credit:focus-visible b { color: #a855f7; }
 
 /* ---------- Lightbox ---------- */
 .lightbox { padding: 0; border: 0; background: transparent; max-width: 94vw; max-height: 90vh; overflow: visible; }
