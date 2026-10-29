@@ -660,6 +660,7 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
   margin: 20px 0 10px;
   color: var(--orange);
   white-space: nowrap;
+  pointer-events: none; /* decorative; its tall letters overhang the base row and would swallow clicks */
 }
 .footer__word .ch { display: inline-block; }
 .footer__base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: rgba(239, 236, 230, 0.5); border-top: 1px solid var(--line-light); padding-top: 18px; }
