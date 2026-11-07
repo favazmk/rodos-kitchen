@@ -495,7 +495,7 @@ function setupForm() {
       `Location: ${d.get('area')}`,
       d.get('message').trim() && `Notes: ${d.get('message').trim()}`,
     ].filter(Boolean).join('\n');
-    window.open('https://wa.me/971559497048?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    window.open('https://wa.me/971559497047?text=' + encodeURIComponent(msg), '_blank', 'noopener');
     status.textContent = 'Opening WhatsApp — thank you! Send the message there and our team will reply.';
   });
   $$('input, select, textarea', form).forEach((f) => f.addEventListener('input', () => f.removeAttribute('aria-invalid')));

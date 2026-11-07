@@ -86,7 +86,7 @@ export default async function (api) {
     s = await page.evaluate(() => ({ opened: window.__opened, status: document.querySelector('.form__status').textContent }));
     const url = s.opened[0]?.[0] || '';
     const text = decodeURIComponent(url.split('text=')[1] || '');
-    check(`${device} valid form opens one WhatsApp chat`, s.opened.length === 1 && url.startsWith('https://wa.me/971559497048?text=') && s.opened[0][1] === '_blank', s.opened);
+    check(`${device} valid form opens one WhatsApp chat`, s.opened.length === 1 && url.startsWith('https://wa.me/971559497047?text=') && s.opened[0][1] === '_blank', s.opened);
     check(`${device} WhatsApp message carries every field`,
       ['Name: Test Visitor', 'Phone: +971 50 123 4567', 'Home: Apartment', `Location: ${area}`, 'Notes: Island with a steel worktop'].every((l) => text.includes(l)), text);
     check(`${device} form confirms to the visitor`, /WhatsApp/.test(s.status), s.status);
