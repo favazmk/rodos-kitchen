@@ -975,3 +975,12 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* Quality assurance cards (kitchens) */
+.qa { margin-top: clamp(48px, 6vw, 88px); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.qa__card { border: 1px solid var(--line-light); border-radius: 14px; padding: clamp(22px, 3vw, 36px); background: rgba(239, 236, 230, 0.03); }
+.qa__num { color: var(--orange-soft); font-size: 12px; }
+.qa__card h3 { margin: 10px 0 12px; color: var(--cream); font-size: clamp(22px, 2.2vw, 28px); }
+.qa__card p { color: rgba(239, 236, 230, 0.75); font-size: 15px; line-height: 1.6; }
+.qa__card ul { margin-top: 18px; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 12px; color: rgba(239, 236, 230, 0.85); }
+.qa__card li::before { content: "✓"; color: var(--orange-soft); margin-right: 10px; }
