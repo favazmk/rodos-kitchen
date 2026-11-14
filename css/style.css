@@ -416,7 +416,7 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 }
 .why__float {
   position: fixed; left: 0; top: 0; z-index: 30;
-  width: 220px; aspect-ratio: 4 / 5;
+  width: 360px; aspect-ratio: 4 / 5;
   border-radius: 6px; overflow: hidden;
   pointer-events: none; opacity: 0; transform: scale(0.6);
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
@@ -523,7 +523,7 @@ em { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-s
 }
 .collections__preview {
   position: fixed; left: 0; top: 0; z-index: 30;
-  width: 340px; aspect-ratio: 4 / 3;
+  width: 480px; aspect-ratio: 4 / 3;
   border-radius: 6px; overflow: hidden; pointer-events: none;
   clip-path: inset(50% 50% 50% 50%);
 }

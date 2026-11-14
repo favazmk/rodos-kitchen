@@ -264,7 +264,7 @@ export function initRing(section, { gsap, ScrollTrigger }) {
     uploads.shift()?.();
     if (!onScreen || section.classList.contains('is-grid')) return;
     // slow drift, paused while a card is hovered or dragged so it stays easy to pick
-    if (!dragging && !hovered) target += dir * (0.0011 + boost * 0.009) * gsap.ticker.deltaRatio();
+    if (!dragging && !hovered) target += dir * (0.0024 + boost * 0.012) * gsap.ticker.deltaRatio();
     boost *= 0.94;
     const goal = target + scrollOffset;
     const prev = current;

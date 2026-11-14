@@ -314,7 +314,7 @@ export function initKitchen(section, { reduced, gsap, ScrollTrigger }) {
     trigger: section,
     refreshPriority: 1,
     start: 'top top',
-    end: () => '+=' + innerHeight * 4,
+    end: () => '+=' + innerHeight * 2.2,
     pin: true,
     scrub: reduced ? false : 0.8,
     onUpdate(self) {
